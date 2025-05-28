@@ -62,10 +62,11 @@ export class A2AClient {
    * @param baseUrl The base URL of the A2A server endpoint.
    * @param fetchImpl Optional custom fetch implementation (e.g., for Node.js environments without global fetch). Defaults to global fetch.
    */
-  constructor(baseUrl: string, fetchImpl: typeof fetch = fetch) {
+  constructor(baseUrl: string, fetchImpl: typeof fetch = fetch, token: string = undefined) {
     // Ensure baseUrl doesn't end with a slash for consistency
     this.baseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
     this.fetchImpl = fetchImpl;
+    this.token = token;
   }
 
   /**
@@ -111,6 +112,7 @@ export class A2AClient {
         headers: {
           "Content-Type": "application/json",
           Accept: acceptHeader,
+          ...(this.token && { Authorization: `Bearer ${this.token}` }),
         },
         body: JSON.stringify(requestBody),
         // Consider adding keepalive: true if making many rapid requests
@@ -366,6 +368,7 @@ export class A2AClient {
         method: "GET",
         headers: {
           Accept: "application/json",
+          ...(this.token && { Authorization: `Bearer ${this.token}` }),
         },
       });
 
