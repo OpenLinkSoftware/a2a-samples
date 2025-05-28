@@ -99,3 +99,11 @@ Click on the task list to see all the A2A task updates from the remote agents
    Answer it's questions in a normal... If you need help converting currency, try adding the LangGraph sample agent too.
 
    Review the events to see what happened.
+
+5. OAuth Client Credentials
+   
+   Add to .env your client id and secret e.g.
+  ```bash
+  echo "OAUTH_CLIENT_ID=your_app_id >> .env
+  echo "OAUTH_CLIENT_SECRET=your_app_secret" >> .env
+  ```
