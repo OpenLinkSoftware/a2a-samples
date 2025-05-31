@@ -16,7 +16,7 @@ from a2a.types import (
 )
 from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
-
+from uuid import uuid4
 
 TaskCallbackArg = Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent
 TaskUpdateCallback = Callable[[TaskCallbackArg, AgentCard], Task]
@@ -43,7 +43,7 @@ class RemoteAgentConnections:
         if self.card.capabilities.streaming:
             task = None
             async for response in self.agent_client.send_message_streaming(
-                SendStreamingMessageRequest(params=request),
+                SendStreamingMessageRequest(id=str(uuid4()), params=request),
                 http_kwargs={ "headers":headers }
             ):
                 if not response.root.result:
@@ -61,7 +61,7 @@ class RemoteAgentConnections:
             return task
         else:  # Non-streaming
             response = await self.agent_client.send_message(
-                SendMessageRequest(params=request),
+                SendMessageRequest(id=str(uuid4()), params=request),
                 http_kwargs={ "headers":headers }
             )
             if isinstance(response.root, JSONRPCErrorResponse):

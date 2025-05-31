@@ -5,6 +5,7 @@ import urllib
 import httpx
 from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
+from dotenv import load_dotenv
 
 from uuid import uuid4
 
@@ -31,6 +32,7 @@ from a2a.types import (
 )
 from common.utils.push_notification_auth import PushNotificationReceiverAuth
 
+load_dotenv()
 
 @click.command()
 @click.option('--agent', default='http://localhost:10000')
