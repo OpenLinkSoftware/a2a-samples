@@ -3,8 +3,7 @@ import base64
 import os
 import urllib
 import httpx
-from oauthlib.oauth2 import BackendApplicationClient
-from requests_oauthlib import OAuth2Session
+from authlib.integrations.httpx_client import OAuth2Client
 from dotenv import load_dotenv
 
 from uuid import uuid4
@@ -135,15 +134,10 @@ def get_oauth_token(agent: str) -> str | None:
             print("Missing 'token_endpoint' in server metadata.")
             return None
 
-        client = BackendApplicationClient(client_id=client_id)
-        oauth = OAuth2Session(client=client)
+        client = OAuth2Client(client_id=client_id, client_secret=client_secret)
 
         try:
-            token_response = oauth.fetch_token(
-                token_url=token_url,
-                client_id=client_id,
-                client_secret=client_secret
-            )
+            token_response = client.fetch_token(url=token_url)
             print ("Obtained OAuth token")
             return token_response.get('access_token')
         except Exception as e:
