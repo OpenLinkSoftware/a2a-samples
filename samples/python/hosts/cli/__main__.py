@@ -33,6 +33,11 @@ from common.utils.push_notification_auth import PushNotificationReceiverAuth
 
 load_dotenv()
 
+def str_to_bool(value):
+    return str(value).lower() in ("1", "true", "yes", "on")
+
+HTTPS_VERIFY = str_to_bool(os.environ.get("HTTPS_VERIFY", "true"))
+
 @click.command()
 @click.option('--agent', default='http://localhost:10000')
 @click.option('--session', default='0')
@@ -50,7 +55,7 @@ async def cli(
 ):
     if None == token:
         token = get_oauth_token(agent)
-    async with httpx.AsyncClient(timeout=30) as httpx_client:
+    async with httpx.AsyncClient(timeout=30, verify=HTTPS_VERIFY) as httpx_client:
         card_resolver = A2ACardResolver(httpx_client, agent)
         card = await card_resolver.get_agent_card()
 
