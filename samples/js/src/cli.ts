@@ -199,7 +199,7 @@ async function main() {
 
   console.log(colorize("dim", `No active task or context initially. Use '/new' to start a fresh session or send a message.`));
   console.log(
-    colorize("green", `Enter messages, or use '/new' to start a new session. '/exit' to quit.`)
+    colorize("green", `Enter messages, or use '/new' to start a new session, /continue [context id] to continue sessison. '/exit' to quit.`)
   );
 
   rl.setPrompt(colorize("cyan", `${agentName} > You: `)); // Set initial prompt
@@ -227,6 +227,21 @@ async function main() {
     if (input.toLowerCase() === "/exit") {
       rl.close();
       return;
+    }
+
+    if (input.toLowerCase().startsWith("/continue ")) {
+        const parts = input.trim().split(" ");
+        if (parts.length >= 2) {
+            currentTaskId = undefined;
+            currentContextId = parts[1];
+            console.log(
+                colorize("bright", `🔁 Continuing session with contextId: ${currentContextId}`)
+            );
+            rl.prompt();
+        } else {
+            console.log( colorize("dim", `⚠️  Please provide a context ID. Usage: /continue <contextId>`));
+        }
+        return;
     }
 
     // Construct params for sendMessageStream
